@@ -4,9 +4,12 @@ require 'pry'
 require 'json'
 require 'mysql2'
 require 'active_support/core_ext/numeric/conversions'
+require 'dotenv/load'
 
-API_KEY = "58C4C3030F82C8001FE3AF4FD9BD1B32"
+API_KEY = ENV['API_KEY']
 EXAMPLE_ADDRESS = "5080 NE 56th Ave"
+
+puts "api key: #{API_KEY}"
 
 print "enter an address or hit the enter key to run with example address (5080 NE 56th Ave): "
 address = gets.chomp
@@ -60,7 +63,7 @@ def get_homeowner(address)
   # api call to portland maps to get owner name
   # ex httpie call:
   # http https://www.portlandmaps.com/api/assessor/ 
-  # api_key=="58C4C3030F82C8001FE3AF4FD9BD1B32" address=="4445 ne wygant"
+  # api_key=="api_key_goes_here" address=="4445 ne wygant"
   response_body = get_request_body_from_address(address)
   
   if response_body != nil

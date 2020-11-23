@@ -1,0 +1,5 @@
+# ignore env files
+# ignore .env file: this file stores the local API key to access portlans maps.
+.env
+
+
