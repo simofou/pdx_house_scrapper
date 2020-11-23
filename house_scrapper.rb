@@ -9,8 +9,6 @@ require 'dotenv/load'
 API_KEY = ENV['API_KEY']
 EXAMPLE_ADDRESS = "5080 NE 56th Ave"
 
-puts "api key: #{API_KEY}"
-
 print "enter an address or hit the enter key to run with example address (5080 NE 56th Ave): "
 address = gets.chomp
 puts "------------------------------------------------------------------"
