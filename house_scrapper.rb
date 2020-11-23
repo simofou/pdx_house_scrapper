@@ -62,9 +62,13 @@ def get_homeowner(address)
   # http https://www.portlandmaps.com/api/assessor/ 
   # api_key=="58C4C3030F82C8001FE3AF4FD9BD1B32" address=="4445 ne wygant"
   response_body = get_request_body_from_address(address)
-  owner = response_body["owner"]
-
-  puts "owner of #{address}: #{owner}"
+  
+  if response_body != nil
+    owner = response_body["owner"]
+    puts "owner of #{address}: #{owner}"
+  else
+    raise "invalid address, please enter a valid addy foo"
+  end
 end
 
 def get_lot_size(address)
