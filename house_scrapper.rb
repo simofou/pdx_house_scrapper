@@ -10,6 +10,7 @@ EXAMPLE_ADDRESS = "5080 NE 56th Ave"
 
 print "enter an address or hit the enter key to run with example address (5080 NE 56th Ave): "
 address = gets.chomp
+puts "------------------------------------------------------------------"
 
 ######
 ###### sql query to db to store table values to hash
@@ -109,6 +110,14 @@ def get_market_value(address)
   puts "current market value: $#{market_value}"
 end
 
+def get_home_size(address)
+  response_body = get_request_body_from_address(address)
+  home_size_sqft = response_body["square_feet"]
+  home_size_sqft = home_size_sqft.to_s(:delimited)
+
+  puts "home size in sqft: #{home_size_sqft}"
+end
+
 if address == ""
   address = EXAMPLE_ADDRESS
 end
@@ -116,6 +125,7 @@ end
 get_homeowner("#{address}")
 get_lot_size("#{address}")
 get_lot_zoning("#{address}")
+get_home_size("#{address}")
 get_market_value("#{address}")
 
 #######
