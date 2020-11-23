@@ -53,8 +53,14 @@ def get_request_body_from_address(address)
   response = connection.get("#{endpoint}") do |request|
     request.params["address"] = "#{address}"
   end
+  
+  response_body = JSON.parse(response.body)
 
-  return response_body = JSON.parse(response.body)["results"][0]
+  if response_body["status"] != "error"
+    return response_body["results"][0]
+  else
+    raise "no response body, must be a bad request. check your .env, api key, and params foo"
+  end
 end
 
 def get_homeowner(address)
@@ -68,7 +74,7 @@ def get_homeowner(address)
     owner = response_body["owner"]
     puts "owner of #{address}: #{owner}"
   else
-    raise "invalid address, please enter a valid addy foo"
+    raise "invalid address. please enter a valid addy foo"
   end
 end
 
