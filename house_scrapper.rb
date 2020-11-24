@@ -2,35 +2,13 @@ require 'active_record'
 require 'faraday'
 require 'pry'
 require 'json'
-require 'mysql2'
 require 'active_support/core_ext/numeric/conversions'
 require 'dotenv/load'
 
 API_KEY = ENV['API_KEY']
 EXAMPLE_ADDRESS = "5080 NE 56th Ave"
 
-######
-###### sql query to db to store table values to hash
-######
-
-def execute_query(query)
-  client = Mysql2::Client.new(:host => "localhost", :username => "root")
-  binding.pry
-  results = client.query("#{query}")
-
-  if results.present?
-    return results
-  else
-    return nil 
-  end
-end
-
-query = "SELECT address FROM nopo;"
-# execute_query(query)
-
-#######
-####### fetch owner data from maps api
-#######
+# helper methods
 
 def connection()
   url = "https://www.portlandmaps.com/api/"
@@ -128,6 +106,8 @@ def get_home_size(address)
   puts "home size in sqft: #{home_size_sqft}"
 end
 
+# run everything
+
 while true do
   puts "------------------------------------------------------------------"
   print "Enter an address or hit the enter key to run with example address (or type 'exit' to exit): "
@@ -146,10 +126,3 @@ while true do
   get_home_size("#{address}")
   get_market_value("#{address}")
 end
-
-#######
-####### push data back to db
-#######
-
-query = "FROM * UPDATE bla bloo"
-# execute_query()
