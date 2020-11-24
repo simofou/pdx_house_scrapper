@@ -9,10 +9,6 @@ require 'dotenv/load'
 API_KEY = ENV['API_KEY']
 EXAMPLE_ADDRESS = "5080 NE 56th Ave"
 
-print "enter an address or hit the enter key to run with example address (5080 NE 56th Ave): "
-address = gets.chomp
-puts "------------------------------------------------------------------"
-
 ######
 ###### sql query to db to store table values to hash
 ######
@@ -73,8 +69,11 @@ def get_homeowner(address)
   if response_body != nil
     owner = response_body["owner"]
     puts "owner of #{address}: #{owner}"
+    return owner
   else
-    raise "invalid address. please enter a valid addy foo"
+    puts "invalid address. please enter a valid addy foo"
+    puts "try again foo"
+    return response_body
   end
 end
 
@@ -129,15 +128,24 @@ def get_home_size(address)
   puts "home size in sqft: #{home_size_sqft}"
 end
 
-if address == ""
-  address = EXAMPLE_ADDRESS
-end
+while true do
+  puts "------------------------------------------------------------------"
+  print "Enter an address or hit the enter key to run with example address (or type 'exit' to exit): "
+  address = gets.chomp
+  puts "------------------------------------------------------------------"
 
-get_homeowner("#{address}")
-get_lot_size("#{address}")
-get_lot_zoning("#{address}")
-get_home_size("#{address}")
-get_market_value("#{address}")
+  if address == ""
+    address = EXAMPLE_ADDRESS
+  elsif address == "exit" 
+    break
+  end
+
+  next if get_homeowner("#{address}") == nil
+  get_lot_size("#{address}")
+  get_lot_zoning("#{address}")
+  get_home_size("#{address}")
+  get_market_value("#{address}")
+end
 
 #######
 ####### push data back to db
