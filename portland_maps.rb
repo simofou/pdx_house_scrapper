@@ -1,7 +1,7 @@
 # Use the Portland Maps API to grab data for and address
 
-module PortlandMapsApi
-  class PortlandMapsApiClass 
+module PortlandMaps
+  class PortlandMapsClass 
     require 'active_record'
     require 'faraday'
     require 'pry'
@@ -107,6 +107,13 @@ module PortlandMapsApi
       home_size_sqft = home_size_sqft.to_s(:delimited)
 
       puts "home size in sqft: #{home_size_sqft}"
+    end
+
+    def self.get_year_built(address)
+      response_body = get_request_body_from_address(address)
+      year_built = response_body["year_built"]
+
+      puts "year built: #{year_built}"
     end
 
     def self.get_location_coordinates(address)

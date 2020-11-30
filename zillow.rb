@@ -4,8 +4,8 @@
 # AND pass the address. Then we use zillow API to return 100 addresses closest to those
 # coordinates (within 0.1 miles) and store them, then search that array for our address...
 
-module ZillowApi
-  class ZillowApiClass
+module Zillow
+  class ZillowClass
     require 'active_record'
     require 'faraday'
     require 'pry'
