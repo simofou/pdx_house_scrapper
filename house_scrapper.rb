@@ -5,7 +5,9 @@ require 'json'
 require 'active_support/core_ext/numeric/conversions'
 require 'dotenv/load'
 
-API_KEY = ENV['API_KEY']
+include ZillowAPI
+
+API_KEY = ENV['PDX_MAPS_API_KEY']
 EXAMPLE_ADDRESS = "5080 NE 56th Ave"
 
 # helper methods
@@ -106,6 +108,16 @@ def get_home_size(address)
   puts "home size in sqft: #{home_size_sqft}"
 end
 
+def get_location_coordinates(address)
+  response_body = get_request_body_from_address(address)
+  longitude = response_body["longitude"]
+  latitude = response_body["latitude"]
+
+  location_coordinates = "#{longitude},#{latitude}"
+  
+  return location_coordinates
+end
+
 # run everything
 
 while true do
@@ -125,4 +137,7 @@ while true do
   get_lot_zoning("#{address}")
   get_home_size("#{address}")
   get_market_value("#{address}")
+
+  location_coordinates = get_location_coordinates("#{address}")
+  ZillowAPI::ZillowAPIClass.get_zestimate(location_coordinates, address)
 end

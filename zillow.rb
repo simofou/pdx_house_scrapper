@@ -16,6 +16,7 @@ module ZillowAPI
     ZILLOW_API_KEY = ENV['ZILLOW_API_KEY']
 
     def self.get_zestimate(location_coordinates, address)
+      address = address.upcase
       url = "https://api.bridgedataoutput.com/api/v2/zestimates"
     
       response = Faraday.get(url) do |req|
@@ -37,7 +38,7 @@ module ZillowAPI
   end
 end
 
-address = "6652 NE GOING ST"
-location_coordinates = "-122.59415,45.55643"
+# address = "6652 NE GOING ST"
+# location_coordinates = "-122.59415,45.55643"
 
-ZillowAPI::ZillowAPIClass.get_zestimate(location_coordinates, address)
+# ZillowAPI::ZillowAPIClass.get_zestimate(location_coordinates, address)
