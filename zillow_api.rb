@@ -4,8 +4,8 @@
 # AND pass the address. Then we use zillow API to return 100 addresses closest to those
 # coordinates (within 0.1 miles) and store them, then search that array for our address...
 
-module ZillowAPI
-  class ZillowAPIClass
+module ZillowApi
+  class ZillowApiClass
     require 'active_record'
     require 'faraday'
     require 'pry'
@@ -13,14 +13,14 @@ module ZillowAPI
     require 'active_support/core_ext/numeric/conversions'
     require 'dotenv/load'
 
-    ZILLOW_API_KEY = ENV['ZILLOW_API_KEY']
+    API_KEY = ENV['ZILLOW_API_KEY']
 
     def self.get_zestimate(location_coordinates, address)
       address = address.upcase
       url = "https://api.bridgedataoutput.com/api/v2/zestimates"
     
       response = Faraday.get(url) do |req|
-        req.params['access_token'] = ZILLOW_API_KEY 
+        req.params['access_token'] = API_KEY 
         req.params['limit'] = 100
         req.params['fields'] = 'zestimate,address'
         req.params['near'] = location_coordinates
@@ -31,14 +31,13 @@ module ZillowAPI
 
       zillow_home_data.each do |home_data|
         next unless home_data["address"].include? "#{address}"
-          puts "zestimate for #{address} is: $#{(home_data["zestimate"]).to_s(:delimited)}"
+          if home_data["zestimate"] != nil
+            puts "zestimate: $#{(home_data["zestimate"]).to_s(:delimited)}"
+          else
+            puts "zestimate: not available"
+          end
           break
       end
     end
   end
 end
-
-# address = "6652 NE GOING ST"
-# location_coordinates = "-122.59415,45.55643"
-
-# ZillowAPI::ZillowAPIClass.get_zestimate(location_coordinates, address)
