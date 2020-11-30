@@ -7,6 +7,8 @@ Currently used to return:
 - lot size (sqft)
 - lot zoning code
 - home size (sqft)
+- year built
 - current market value
+- Zestimate
 
 ![alt text](https://github.com/simonfoucher/pdx_house_scrapper/blob/main/pdx_house_scrapper_screenshot.png)
