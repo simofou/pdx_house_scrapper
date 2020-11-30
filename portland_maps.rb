@@ -1,4 +1,4 @@
-# Use the Portland Maps API to grab data for and address
+# Use the Portland Maps API to grab data for an address
 
 module PortlandMaps
   class PortlandMapsClass 

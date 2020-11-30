@@ -1,7 +1,7 @@
 # So here we want to grab the zestimate for an address.
-# BUT you can't pass an address as a param for the zestimate API...
-# SO closest thing is pass address location coordinates (from PDX MAPS)
-# AND pass the address. Then we use zillow API to return 100 addresses closest to those
+# BUT you can't pass an address as a param for the zestimate API... (dafuk?)
+# SO closest thing is pass address AND location coordinates (from PDX MAPS)
+# Then we use zillow API to return 100 addresses closest to those
 # coordinates (within 0.1 miles) and store them, then search that array for our address...
 
 module Zillow
