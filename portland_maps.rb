@@ -58,6 +58,23 @@ module PortlandMaps
       end
     end
 
+    def self.get_full_address(address)
+      owner = get_homeowner(address)
+      response_body = get_request_body_from_address(address)
+
+      address_street = response_body["address"]
+      address_city = response_body["city"]
+      address_state = response_body["state"]
+      address_zip_code = response_body["zip_code_string"]
+
+      full_address = "
+        #{owner}
+        #{address_street}
+        #{address_city} #{address_state} #{address_zip_code}
+      "
+      return full_address
+    end
+
     def self.get_lot_size(address)
       endpoint = "detail/"
 
@@ -96,7 +113,7 @@ module PortlandMaps
     def self.get_market_value(address)
       response_body = get_request_body_from_address(address)
       market_value = response_body["market_value"]
-      market_value = market_value.to_s(:delimited)
+      market_value = market_value&.to_s(:delimited)
 
       puts "current market value: $#{market_value}"
     end
@@ -104,7 +121,7 @@ module PortlandMaps
     def self.get_home_size(address)
       response_body = get_request_body_from_address(address)
       home_size_sqft = response_body["square_feet"]
-      home_size_sqft = home_size_sqft.to_s(:delimited)
+      home_size_sqft = home_size_sqft&.to_s(:delimited)
 
       puts "home size in sqft: #{home_size_sqft}"
     end
@@ -123,6 +140,18 @@ module PortlandMaps
       location_coordinates = "#{longitude},#{latitude}"
       
       return location_coordinates
+    end
+
+    def self.get_neighborhood(address)
+      response_body = get_request_body_from_address(address)
+      neighborhood = response_body["neighborhood"]
+
+      if neighborhood == "CULLY ASSOCIATION OF NEIGHBORS"
+        neighborhood = "Cully"
+      end
+
+      puts "neighborhood: #{neighborhood}"
+      return neighborhood
     end
   end
 end
