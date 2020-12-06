@@ -1,0 +1,6 @@
+# add these to your bash profile:
+
+# pdx house scrapper
+alias write='ruby -W0 letter_generator.rb'
+alias scrape='ruby -W0 house_scrapper.rb'
+alias store='ruby -W0 add_address_data_to_db.rb'

@@ -18,7 +18,7 @@ def owner_is_single_human?(owner)
   owner_is_human?(owner) && (!owner.include? '&')
 end
 
-def owner_is_a_human_couple?(owner)
+def owner_is_human_couple?(owner)
   owner_is_human?(owner) && (owner.include? '&')
 end
 
@@ -40,7 +40,7 @@ end
 def generate_custom_letter(owner, neighborhood, address)
   if owner_is_single_human?(owner)
     owner = format_human_owner(owner, "single")
-  elsif owner_is_a_human_couple?(owner)
+  elsif owner_is_human_couple?(owner)
     owner = format_human_owner(owner, "couple")
   else  
     owner = "Homeowner" # owner is most likely a business
@@ -68,7 +68,7 @@ end
 
 while true do
   puts "------------------------------------------------------------------"
-    print "what address do you want to generate a letter for (type 'exit' to exit): "
+    print "Enter an address you want to generate a letter for (type 'exit' to exit): "
     address = gets.chomp
   puts "------------------------------------------------------------------"
 

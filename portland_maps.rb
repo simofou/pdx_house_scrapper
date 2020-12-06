@@ -49,7 +49,6 @@ module PortlandMaps
       
       if response_body != nil
         owner = response_body["owner"]
-        # puts "owner of #{address}: #{owner}"
         return owner
       else
         puts "invalid address. please enter a valid addy foo"
@@ -91,7 +90,6 @@ module PortlandMaps
       lot_size_sqft = lot_size_sqft.to_s(:delimited)
 
       return lot_size_sqft
-      # puts "lot size in sqft: #{lot_size_sqft}"
     end
 
     def self.get_lot_zoning(address)
@@ -108,9 +106,7 @@ module PortlandMaps
       body = JSON.parse(response.body)["zoning"]
       lot_zoning_code = body["base_overlay_combination"][0]["code"]
 
-
       return lot_zoning_code
-      # puts "lot zoning code: #{lot_zoning_code}"
     end
 
     def self.get_market_value(address)
@@ -119,7 +115,6 @@ module PortlandMaps
       market_value = market_value&.to_s(:delimited)
 
       return market_value
-      # puts "current market value: $#{market_value}"
     end
 
     def self.get_home_size(address)
@@ -128,7 +123,6 @@ module PortlandMaps
       home_size_sqft = home_size_sqft&.to_s(:delimited)
 
       return home_size_sqft
-      # puts "home size in sqft: #{home_size_sqft}"
     end
 
     def self.get_year_built(address)
@@ -136,7 +130,6 @@ module PortlandMaps
       year_built = response_body["year_built"]
 
       return year_built
-      # puts "year built: #{year_built}"
     end
 
     def self.get_location_coordinates(address)
@@ -156,7 +149,6 @@ module PortlandMaps
         neighborhood = "Cully"
       end
 
-      # puts "neighborhood: #{neighborhood}"
       return neighborhood
     end
   end
