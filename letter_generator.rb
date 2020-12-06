@@ -2,41 +2,48 @@
 # letter creator: create personalized letters from a short address
 # - grab short address from sql db and create a personalized letter file
 # - create sticky letter label for that owner/address
+#
 
-require 'mysql2'
 require_relative "portland_maps.rb"
 
-# #####
-# ##### sql query to db to store table values to hash
-# #####
-
-# def execute_query(query)
-#   client = Mysql2::Client.new(:host => "localhost", :username => "root")
-#   binding.pry
-#   results = client.query("#{query}")
-
-#   if results.present?
-#     return results
-#   else
-#     return nil 
-#   end
-# end
-
-# query = "SELECT address FROM nopo;"
-# execute_query(query)
+EXAMPLE_ADDRESS = "4433 NE FAILING ST"
 
 # helper methods
 
-def owner_is_human(owner)
-  owner.include? ","
+def owner_is_human?(owner)
+  owner.include? ','
+end
+
+def owner_is_single_human?(owner)
+  owner_is_human?(owner) && (!owner.include? '&')
+end
+
+def owner_is_a_human_couple?(owner)
+  owner_is_human?(owner) && (owner.include? '&')
+end
+
+def format_human_owner(owner, owner_status) # this is so messy needs refactoring
+  if owner_status == "single"
+    format_owner = owner.split(',')
+    return owner = "#{format_owner[-1].capitalize} #{format_owner[0].capitalize}"
+  elsif owner_status == "couple"
+    format_owner = owner.split('&')
+    complete_owner_names = ""
+    format_owner.each do |owner|
+      owner = format_human_owner(owner, "single").to_s
+      complete_owner_names = complete_owner_names + " " + owner
+    end
+    return complete_owner_names
+  end
 end
 
 def generate_custom_letter(owner, neighborhood, address)
-  if owner_is_human(owner)
-    format_owner = owner.split(',')
-    owner = "#{format_owner[-1].capitalize} #{format_owner[0].capitalize}" # this should live in the homeowner method
-  else
-    owner = "Homeowner"
+  if owner_is_single_human?(owner)
+    owner = format_human_owner(owner, "single")
+  elsif owner_is_a_human_couple?(owner)
+    owner = format_human_owner(owner, "couple")
+  else  
+    owner = "Homeowner" # owner is most likely a business
   end
 
   letter_template = File.open("./letter_template.txt")
@@ -47,15 +54,14 @@ def generate_custom_letter(owner, neighborhood, address)
     .sub!("<address_street>", "#{address.capitalize}")
   letter_template.close
 
-  formated_address = address.delete(' ').downcase
+  formated_address = address.delete(' ').downcase # formating for file name
   puts "writing custom letter: /tmp/letter_generator/custom_letter_#{formated_address}.txt"
   File.write("/tmp/letter_generator/custom_letter_#{formated_address}.txt", "#{custom_letter}")
 end
 
-def generate_custom_address_label(address, full_address)
-  formated_address = address.delete(' ').downcase
-  puts "writing address label: /tmp/letter_generator/custom_address_label_#{formated_address}.txt"
-  File.write("/tmp/letter_generator/custom_address_label_#{formated_address}.txt", "#{full_address}")
+def generate_custom_address_label(full_address)
+  puts "appending address label to: /tmp/letter_generator/custom_address_label.txt"
+  File.write("/tmp/letter_generator/custom_address_label.txt", "#{full_address}", mode: 'a')
 end
 
 # user prompt:
@@ -72,10 +78,10 @@ while true do
     break
   end
 
-  owner = PortlandMaps::PortlandMapsClass.get_homeowner(address)
+  next unless owner = PortlandMaps::PortlandMapsClass.get_homeowner(address)
   full_address = PortlandMaps::PortlandMapsClass.get_full_address(address)
   neighborhood = PortlandMaps::PortlandMapsClass.get_neighborhood(address)
 
   generate_custom_letter(owner, neighborhood, address)
-  generate_custom_address_label(address, full_address)
+  generate_custom_address_label(full_address)
 end

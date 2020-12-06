@@ -32,9 +32,10 @@ module Zillow
       zillow_home_data.each do |home_data|
         next unless home_data["address"].include? "#{address}"
           if home_data["zestimate"] != nil
-            puts "zestimate: $#{(home_data["zestimate"]).to_s(:delimited)}"
+            zestimate = "$#{home_data["zestimate"].to_s(:delimited)}"
+            return zestimate
           else
-            puts "zestimate: not available"
+            return nil
           end
           break
       end

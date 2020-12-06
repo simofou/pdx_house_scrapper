@@ -49,7 +49,7 @@ module PortlandMaps
       
       if response_body != nil
         owner = response_body["owner"]
-        puts "owner of #{address}: #{owner}"
+        # puts "owner of #{address}: #{owner}"
         return owner
       else
         puts "invalid address. please enter a valid addy foo"
@@ -90,7 +90,8 @@ module PortlandMaps
       lot_size_sqft = body["total_land_area_sqft"]
       lot_size_sqft = lot_size_sqft.to_s(:delimited)
 
-      puts "lot size in sqft: #{lot_size_sqft}"
+      return lot_size_sqft
+      # puts "lot size in sqft: #{lot_size_sqft}"
     end
 
     def self.get_lot_zoning(address)
@@ -107,7 +108,9 @@ module PortlandMaps
       body = JSON.parse(response.body)["zoning"]
       lot_zoning_code = body["base_overlay_combination"][0]["code"]
 
-      puts "lot zoning code: #{lot_zoning_code}"
+
+      return lot_zoning_code
+      # puts "lot zoning code: #{lot_zoning_code}"
     end
 
     def self.get_market_value(address)
@@ -115,7 +118,8 @@ module PortlandMaps
       market_value = response_body["market_value"]
       market_value = market_value&.to_s(:delimited)
 
-      puts "current market value: $#{market_value}"
+      return market_value
+      # puts "current market value: $#{market_value}"
     end
 
     def self.get_home_size(address)
@@ -123,14 +127,16 @@ module PortlandMaps
       home_size_sqft = response_body["square_feet"]
       home_size_sqft = home_size_sqft&.to_s(:delimited)
 
-      puts "home size in sqft: #{home_size_sqft}"
+      return home_size_sqft
+      # puts "home size in sqft: #{home_size_sqft}"
     end
 
     def self.get_year_built(address)
       response_body = get_request_body_from_address(address)
       year_built = response_body["year_built"]
 
-      puts "year built: #{year_built}"
+      return year_built
+      # puts "year built: #{year_built}"
     end
 
     def self.get_location_coordinates(address)
@@ -150,7 +156,7 @@ module PortlandMaps
         neighborhood = "Cully"
       end
 
-      puts "neighborhood: #{neighborhood}"
+      # puts "neighborhood: #{neighborhood}"
       return neighborhood
     end
   end
