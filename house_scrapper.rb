@@ -6,13 +6,13 @@ class HouseScrapper
 
   while true do
     puts "------------------------------------------------------------------"
-    print "Enter an address or hit the enter key to run with example address (or type 'exit' to exit): "
+    print "Enter an address or hit the enter key to run with example address (or type 'q' to exit): "
     address = gets.chomp.strip
     puts "------------------------------------------------------------------"
 
     if address == ""
       address = EXAMPLE_ADDRESS
-    elsif address == "exit" 
+    elsif address == "q" 
       break
     end
 
