@@ -68,7 +68,7 @@ end
 
 while true do
   puts "------------------------------------------------------------------"
-    print "Enter an address you want to generate a letter for (type 'q' to exit): "
+    print "Enter an address you want to generate a letter for (type 'q' to quit): "
     address = gets.chomp.strip
   puts "------------------------------------------------------------------"
 

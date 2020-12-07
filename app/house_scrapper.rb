@@ -6,7 +6,7 @@ class HouseScrapper
 
   while true do
     puts "------------------------------------------------------------------"
-    print "Enter an address or hit the enter key to run with example address (or type 'q' to exit): "
+    print "Enter an address or hit the enter key to run with example address (or type 'q' to quit): "
     address = gets.chomp.strip
     puts "------------------------------------------------------------------"
 
