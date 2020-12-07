@@ -46,7 +46,7 @@ def generate_custom_letter(owner, neighborhood, address)
     owner = "Homeowner" # owner is most likely a business
   end
 
-  letter_template = File.open("./letter_template.txt")
+  letter_template = File.open("letter_template.txt")
   letter_template_data = letter_template.read
   custom_letter = letter_template_data
     .sub!("<homeowner>", "#{owner}")

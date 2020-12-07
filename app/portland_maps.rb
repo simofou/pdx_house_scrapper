@@ -49,7 +49,7 @@ module PortlandMaps
       
       if response_body != nil
         owner = response_body["owner"]
-        return owner
+        return owner.capitalize
       else
         puts "invalid address. please enter a valid addy foo"
         puts "try again foo"
@@ -149,7 +149,7 @@ module PortlandMaps
         neighborhood = "Cully"
       end
 
-      return neighborhood
+      return neighborhood.capitalize
     end
   end
 end

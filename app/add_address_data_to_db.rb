@@ -53,3 +53,4 @@ while true do
   execute_query(add_addy_query)
   puts "BOOM added #{address} to the database"
 end
+ 
