@@ -10,6 +10,7 @@ Currently used to return:
 - year built
 - current market value
 - Zestimate
+- Foostimate (Copyright Mone 2020)
 
 * *scrape* tool
 
