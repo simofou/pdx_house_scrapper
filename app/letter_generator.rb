@@ -1,5 +1,5 @@
 #
-# letter creator: create personalized letters from a short address
+# This "write" tool creates personalized letters from a short address
 # - grab short address from sql db and create a personalized letter file
 # - create sticky letter label for that owner/address
 #
@@ -8,44 +8,7 @@ require_relative "portland_maps.rb"
 
 EXAMPLE_ADDRESS = "4433 NE FAILING ST"
 
-# helper methods
-
-def owner_is_human?(owner)
-  owner.include? ','
-end
-
-def owner_is_single_human?(owner)
-  owner_is_human?(owner) && (!owner.include? '&')
-end
-
-def owner_is_human_couple?(owner)
-  owner_is_human?(owner) && (owner.include? '&')
-end
-
-def format_human_owner(owner, owner_status) # this is so messy needs refactoring
-  if owner_status == "single"
-    format_owner = owner.split(',')
-    return owner = "#{format_owner[-1].capitalize} #{format_owner[0].capitalize}"
-  elsif owner_status == "couple"
-    format_owner = owner.split('&')
-    complete_owner_names = ""
-    format_owner.each do |owner|
-      owner = format_human_owner(owner, "single").to_s
-      complete_owner_names = complete_owner_names + " " + owner
-    end
-    return complete_owner_names
-  end
-end
-
 def generate_custom_letter(owner, neighborhood, address)
-  if owner_is_single_human?(owner)
-    owner = format_human_owner(owner, "single")
-  elsif owner_is_human_couple?(owner)
-    owner = format_human_owner(owner, "couple")
-  else  
-    owner = "Homeowner" # owner is most likely a business
-  end
-
   letter_template = File.open("letter_template.txt")
   letter_template_data = letter_template.read
   custom_letter = letter_template_data

@@ -11,7 +11,54 @@ module PortlandMaps
 
     API_KEY = ENV['PDX_MAPS_API_KEY']
 
-    # helper methods
+    # Helper methods
+
+    def self.owner_is_human?(owner)
+      owner.include? ','
+    end
+
+    def self.owner_is_single_human?(owner)
+      owner_is_human?(owner) && (!owner.include? '&')
+    end
+
+    def self.owner_is_multiple_humans?(owner)
+      owner_is_human?(owner) && (owner.include? '&')
+    end
+
+    def self.format_single_owner(owner)
+      owner = owner.strip.split(',')
+      owner = owner.insert(0, owner.delete_at(1))
+      owner = "#{owner[0].capitalize} #{owner[1].capitalize}"
+      return owner
+    end
+
+    def self.format_multiple_owners(owner)
+      owner = owner.split('&')
+      complete_owner = ""
+      
+      owner.each_with_index do |owner, i|
+        owner = format_single_owner(owner)
+        if i == 0
+          complete_owner += owner
+        else
+          complete_owner += ' & ' + owner
+        end
+      end
+      return complete_owner
+    end
+
+    def self.format_owner(owner)
+      if owner_is_single_human?(owner)
+        owner = format_single_owner(owner)  
+      elsif owner_is_multiple_humans?(owner)
+        owner = format_multiple_owners(owner)
+      else
+        owner # owner is probably a business so who cares about formatting
+      end
+      return owner
+    end
+
+    # Portland Maps API methods
 
     def self.connection()
       url = "https://www.portlandmaps.com/api/"
@@ -49,7 +96,7 @@ module PortlandMaps
       
       if response_body != nil
         owner = response_body["owner"]
-        return owner.capitalize
+        return format_owner(owner)
       else
         puts "invalid address. please enter a valid addy foo"
         puts "try again foo"
@@ -84,7 +131,6 @@ module PortlandMaps
         request.params["detail_type"] = "assessor"
         request.params["detail_id"] = "#{detail_id}"
       end  
-
       body = JSON.parse(response.body)["general"]
       lot_size_sqft = body["total_land_area_sqft"]
       lot_size_sqft = lot_size_sqft.to_s(:delimited)

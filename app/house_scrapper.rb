@@ -1,8 +1,36 @@
+#
+# This "scrape" tool scrapes the Portland Maps and Zillow APIs to grab
+# data for an address and outputs it to the terminal
+#
+
 class HouseScrapper
   require_relative "zillow.rb"
   require_relative "portland_maps.rb"
-  
+  require 'active_support/core_ext/numeric/conversions'
+
   EXAMPLE_ADDRESS = "5080 NE 56th Ave"
+
+  def self.foostimate(zestimate, market_value) # foucher custom estimate ;)
+    if (zestimate.blank? || market_value.blank?)
+      return nil
+    else
+      zestimate = zestimate.delete(',').to_i
+      market_value = market_value.delete(',').to_i
+
+      return ((zestimate + market_value * 3) / 4).to_s(:delimited)
+    end
+  end
+
+  def self.handle_nil_value(command)
+    error_message = " not available"
+    if command.nil?
+      error_message
+    else
+      command
+    end
+  end
+
+  # user prompt
 
   while true do
     puts "------------------------------------------------------------------"
@@ -24,16 +52,18 @@ class HouseScrapper
       market_value = PortlandMaps::PortlandMapsClass.get_market_value(address)
       location_coordinates = 
         PortlandMaps::PortlandMapsClass.get_location_coordinates(address)
-      zestimate = Zillow::ZillowClass.get_zestimate(location_coordinates, address)
+      zestimate =  Zillow::ZillowClass.get_zestimate(location_coordinates, address)
+      foostimate = foostimate(zestimate, market_value)
 
       puts "
         owner of #{address}: #{owner}
         lot size in sqft: #{lot_size_sqft}
         lot zoning code: #{lot_zoning_code}
-        home size in sqft: #{home_size_sqft}
-        year built: #{year_built}
+        home size in sqft: #{handle_nil_value(home_size_sqft)}
+        year built: #{handle_nil_value(year_built)}
         current market value: $#{market_value}
-        zestimate: #{zestimate}
+        zestimate: $#{handle_nil_value(zestimate)}
+        foostimate: $#{handle_nil_value(foostimate)}
       "
   end
 end

@@ -1,7 +1,7 @@
-
-# #####
-# ##### sql query to db to store table values to hash
-# #####
+#
+# This "store" tool stores a user-entered address with relevant data to the
+# local SQL database
+#
 
 require 'mysql2'
 require 'active_record'
@@ -23,7 +23,7 @@ def execute_query(query)
   end
 end
 
-# user prompt:
+# user prompt
 
 while true do
   puts "------------------------------------------------------------------"
