@@ -1,4 +1,4 @@
-#
+  #
 # This "scrape" tool scrapes the Portland Maps and Zillow APIs to grab
 # data for an address and outputs it to the terminal
 #

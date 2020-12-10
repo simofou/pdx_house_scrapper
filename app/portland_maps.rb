@@ -35,9 +35,12 @@ module PortlandMaps
     def self.format_multiple_owners(owner)
       owner = owner.split('&')
       complete_owner = ""
-      
+
       owner.each_with_index do |owner, i|
-        owner = format_single_owner(owner)
+        if owner_is_human?(owner)  
+          owner = format_single_owner(owner)
+        end
+
         if i == 0
           complete_owner += owner
         else
@@ -83,7 +86,7 @@ module PortlandMaps
       if response_body["status"] != "error"
         return response_body["results"][0]
       else
-        raise "no response body, must be a bad request. check your .env, api key, and params foo"
+        raise "status #{response.status}: no response body, must be a bad request. check your .env, api key, and params foo"
       end
     end
 
