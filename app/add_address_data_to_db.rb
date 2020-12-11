@@ -30,21 +30,34 @@ def backfill_table()
   address_not_added = []
 
   addys_arr.each do |addy|
-    address = addy['address'].to_s.strip
+    address = addy['address'].strip.upcase
     puts "adding #{address}"
+
+    # columns:
     owner = PortlandMaps::PortlandMapsClass.get_homeowner(address)
     neighborhood = PortlandMaps::PortlandMapsClass.get_neighborhood(address)
 
+    select_notes_from_addy = "SELECT notes FROM nopo WHERE address='#{address}'"
+    select_priority_from_addy = "SELECT priority FROM nopo WHERE address='#{address}'"
+    select_letter_sent_from_addy = "SELECT letter_sent FROM nopo WHERE address='#{address}'"
+
+    notes_sql = execute_query(select_notes_from_addy)
+      notes = notes_sql.first["notes"]
+    priority_sql = execute_query(select_priority_from_addy)
+      priority = priority_sql.first["priority"]
+    letter_sent_sql = execute_query(select_letter_sent_from_addy)
+      letter_sent = letter_sent_sql.first["letter_sent"]
+
     add_addy_query = "
-      INSERT INTO test
-      (address, homeowner, neighborhood)
+      INSERT INTO nopo_home_data
+      (address, owner, neighborhood, letter_sent, notes, priority)
       VALUES
-      ('#{address}', '#{owner}', '#{neighborhood}')
+      ('#{address}', '#{owner}', '#{neighborhood}', '#{letter_sent}', '#{notes}', '#{priority}')
     "
     begin 
       execute_query(add_addy_query)
     rescue 
-      print "#{address} ======> not added!!!! do this one manually..."
+      puts "#{address} ======> not added!!!! do this one manually..."
       address_not_added << address
     end
   end
@@ -54,15 +67,13 @@ end
 
 # user prompt
 
-backfill_table()
-
 while true do
   puts "------------------------------------------------------------------"
     print "Enter an address you want to store in the database (type 'q' to quit): "
-    address = gets.chomp.strip
+    address = gets.chomp.strip.upcase
   puts "------------------------------------------------------------------"
 
-  if address == "q"
+  if address == "Q"
     break
   end
 
@@ -73,45 +84,14 @@ while true do
   notes = gets.chomp.strip
 
   puts "what priority? "
-  priority = gets.chomp.strip
+  priority = gets.chomp.strip.to_i
 
   add_addy_query = "
-  INSERT INTO test
-    (address, homeowner, neighborhood, notes, priority)
+  INSERT INTO nopo_home_data
+    (address, owner, neighborhood, notes, priority)
   VALUES
-    ('#{address}', '#{owner}', '#{neighborhood}', '#{notes}!', #{priority})
+    ('#{address}', '#{owner}', '#{neighborhood}', '#{notes}', '#{priority}')
   "
   execute_query(add_addy_query)
   puts "BOOM added #{address} to the database"
 end
- 
-## useful queries:
-
-add_addy_query = "
-INSERT INTO test
-  (address, owner, neighborhood, notes, priority)
-VALUES
-  ('#{address}', '#{owner}', '#{neighborhood}', '#{notes}!', #{priority})
-"
-
-select_addy_from_table = "SELECT address FROM nopo_homes;"
-
-select_owner_from_addy = "SELECT owner FROM nopo_homes WHERE address='<address>'"
-
-update_owner_from_addy = "
-  UPDATE nopo_homes
-  SET owner = <owner>'
-  WHERE address = '<address>';
-"
-update_addy_from_addy = "
-  UPDATE nopo_homes
-  SET address = <new_address>'
-  WHERE address = '<address_in_table>';
-"
-
-update_neighborhood_from_addy = "
-  UPDATE nopo_homes
-  SET neighborhood = <neighborhood>'
-  WHERE address = '<address>';
-"
-
