@@ -30,7 +30,7 @@ module Zillow
       zillow_home_data = response_body["bundle"] # array of hashes - each hash is a home that matches our query and contains :address, :zestimate...
 
       zillow_home_data.each do |home_data|
-        next unless home_data["address"].include? "#{address}"
+        next unless home_data["address"].upcase.include? "#{address}"
           if home_data["zestimate"] != nil
             zestimate = "#{home_data["zestimate"].to_s(:delimited)}"
             return zestimate
