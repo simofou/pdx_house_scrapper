@@ -8,6 +8,7 @@ Currently used to return:
 - lot zoning code
 - home size (sqft)
 - year built
+- property taxes
 - current market value
 - Zestimate
 - Foostimate (Copyright Mone 2020)
