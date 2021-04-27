@@ -28,17 +28,17 @@ module Zillow
       end
       response_body = JSON.parse(response.body)
       zillow_home_data = response_body["bundle"] # array of hashes - each hash is a home that matches our query and contains :address, :zestimate...
+      zestimate = nil
 
       zillow_home_data.each do |home_data|
         next unless home_data["address"].upcase.include? "#{address}"
-          if home_data["zestimate"] != nil
-            zestimate = "#{home_data["zestimate"].to_s(:delimited)}"
-            return zestimate
-          else
-            return nil
-          end
-          break
+        if home_data["zestimate"] != nil
+          zestimate = "#{home_data["zestimate"].to_s(:delimited)}"
+        end
+        break
       end
+
+      zestimate
     end
   end
 end

@@ -12,12 +12,12 @@ class HouseScrapper
 
   def self.foostimate(zestimate, market_value) # foucher custom estimate ;)
     if (zestimate.blank? || market_value.blank?)
-      return nil
+      nil
     else
       zestimate = zestimate.delete(',').to_i
       market_value = market_value.delete(',').to_i
 
-      return ((zestimate + market_value * 3) / 4).to_s(:delimited)
+      ((zestimate + market_value * 3) / 4).to_s(:delimited)
     end
   end
 
@@ -25,7 +25,7 @@ class HouseScrapper
     error_message = " not available"
     if command.nil?
       error_message
-    else
+    else  
       command
     end
   end
@@ -50,6 +50,7 @@ class HouseScrapper
       home_size_sqft = PortlandMaps::PortlandMapsClass.get_home_size(address)
       year_built = PortlandMaps::PortlandMapsClass.get_year_built(address)
       market_value = PortlandMaps::PortlandMapsClass.get_market_value(address)
+      property_taxes = PortlandMaps::PortlandMapsClass.get_property_taxes(address)
       location_coordinates = 
         PortlandMaps::PortlandMapsClass.get_location_coordinates(address)
       zestimate =  Zillow::ZillowClass.get_zestimate(location_coordinates, address)
@@ -57,10 +58,11 @@ class HouseScrapper
 
       puts "
         owner of #{address}: #{owner}
-        lot size in sqft: #{lot_size_sqft}
+        lot size: #{lot_size_sqft}
         lot zoning code: #{lot_zoning_code}
         home size in sqft: #{handle_nil_value(home_size_sqft)}
         year built: #{handle_nil_value(year_built)}
+        property taxes: #{property_taxes}
         current market value: $#{market_value}
         zestimate: $#{handle_nil_value(zestimate)}
         foostimate: $#{handle_nil_value(foostimate)}

@@ -29,7 +29,6 @@ module PortlandMaps
       owner = owner.strip.split(',')
       owner = owner.insert(0, owner.delete_at(1))
       owner = "#{owner[0].capitalize} #{owner[1].capitalize}"
-      return owner
     end
 
     def self.format_multiple_owners(owner)
@@ -47,18 +46,17 @@ module PortlandMaps
           complete_owner += ' & ' + owner
         end
       end
-      return complete_owner
+      complete_owner
     end
 
     def self.format_owner(owner)
       if owner_is_single_human?(owner)
-        owner = format_single_owner(owner)  
+        format_single_owner(owner)  
       elsif owner_is_multiple_humans?(owner)
-        owner = format_multiple_owners(owner)
+        format_multiple_owners(owner)
       else
         owner # owner is probably a business so who cares about formatting
       end
-      return owner
     end
 
     # Portland Maps API methods
@@ -84,7 +82,7 @@ module PortlandMaps
       response_body = JSON.parse(response.body)
 
       if response_body["status"] != "error"
-        return response_body["results"][0]
+        response_body["results"][0]
       else
         raise "status #{response.status}: no response body, must be a bad request. check your .env, api key, and params foo"
       end
@@ -99,11 +97,11 @@ module PortlandMaps
       
       if response_body != nil
         owner = response_body["owner"]
-        return format_owner(owner)
+        format_owner(owner)
       else
         puts "invalid address. please enter a valid addy foo"
         puts "try again foo"
-        return response_body # nil
+        response_body # nil
       end
     end
 
@@ -116,12 +114,11 @@ module PortlandMaps
       address_state = response_body["state"]
       address_zip_code = response_body["zip_code_string"]
 
-      full_address = "
+      "
         #{owner}
         #{address_street}
         #{address_city} #{address_state} #{address_zip_code}
       "
-      return full_address
     end
 
     def self.get_lot_size(address)
@@ -133,12 +130,11 @@ module PortlandMaps
       response = connection.get("#{endpoint}") do |request|
         request.params["detail_type"] = "assessor"
         request.params["detail_id"] = "#{detail_id}"
-      end  
-      body = JSON.parse(response.body)["general"]
-      lot_size_sqft = body["total_land_area_sqft"]
-      lot_size_sqft = lot_size_sqft.to_s(:delimited)
+      end 
 
-      return lot_size_sqft
+      body = JSON.parse(response.body)["general"]
+      
+      body["total_land_area"]
     end
 
     def self.get_lot_zoning(address)
@@ -153,41 +149,55 @@ module PortlandMaps
       end  
 
       body = JSON.parse(response.body)["zoning"]
-      lot_zoning_code = body["base_overlay_combination"][0]["code"]
-
-      return lot_zoning_code
+      
+      body["base_overlay_combination"][0]["code"]
     end
 
     def self.get_market_value(address)
       response_body = get_request_body_from_address(address)
       market_value = response_body["market_value"]
+      
       market_value = market_value&.to_s(:delimited)
+    end
 
-      return market_value
+    def self.get_property_taxes(address)
+      endpoint = "detail/"
+
+      response_body = get_request_body_from_address(address)
+      detail_id = response_body["property_id"]
+
+      response = connection.get("#{endpoint}") do |request|
+        request.params["detail_type"] = "assessor"
+        request.params["detail_id"] = "#{detail_id}"
+        request.params["sections"] = "*"
+      end
+
+      body = JSON.parse(response.body)["tax history"].first
+      tax_year = body["year"]
+      property_tax = body["property_tax"]
+
+      "#{property_tax} (#{tax_year})"
     end
 
     def self.get_home_size(address)
       response_body = get_request_body_from_address(address)
       home_size_sqft = response_body["square_feet"]
-      home_size_sqft = home_size_sqft&.to_s(:delimited)
-
-      return home_size_sqft
+      
+      home_size_sqft&.to_s(:delimited)
     end
 
     def self.get_year_built(address)
       response_body = get_request_body_from_address(address)
-      year_built = response_body["year_built"]
-
-      return year_built
+      
+      response_body["year_built"]
     end
 
     def self.get_location_coordinates(address)
       response_body = get_request_body_from_address(address)
       longitude = response_body["longitude"]
       latitude = response_body["latitude"]
-      location_coordinates = "#{longitude},#{latitude}"
       
-      return location_coordinates
+      "#{longitude},#{latitude}"
     end
 
     def self.get_neighborhood(address)
@@ -198,7 +208,7 @@ module PortlandMaps
         neighborhood = "Cully"
       end
 
-      return neighborhood.capitalize
+      neighborhood.capitalize
     end
   end
 end
