@@ -48,6 +48,7 @@ class HouseScrapper
       lot_size_sqft = PortlandMaps::PortlandMapsClass.get_lot_size(address)
       lot_zoning_code = PortlandMaps::PortlandMapsClass.get_lot_zoning(address)
       home_size_sqft = PortlandMaps::PortlandMapsClass.get_home_size(address)
+      home_foundation = PortlandMaps::PortlandMapsClass.get_foundation_type(address)
       year_built = PortlandMaps::PortlandMapsClass.get_year_built(address)
       market_value = PortlandMaps::PortlandMapsClass.get_market_value(address)
       real_market_value = PortlandMaps::PortlandMapsClass.get_real_market_value(address)
@@ -62,6 +63,7 @@ class HouseScrapper
         lot size: #{lot_size_sqft}
         lot zoning code: #{lot_zoning_code}
         home size in sqft: #{handle_nil_value(home_size_sqft)}
+        foundation: #{home_foundation}
         year built: #{handle_nil_value(year_built)}
         property taxes: #{property_taxes}
         current market value: $#{market_value}

@@ -205,6 +205,33 @@ module PortlandMaps
       home_size_sqft&.to_s(:delimited)
     end
 
+    def self.get_foundation_type(address)
+      endpoint = "detail/"
+
+      response_body = get_request_body_from_address(address)
+      detail_id = response_body["property_id"]
+
+      response = connection.get("#{endpoint}") do |request|
+        request.params["detail_type"] = "assessor"
+        request.params["detail_id"] = "#{detail_id}"
+        request.params["sections"] = "*"
+      end
+
+      body = JSON.parse(response.body)
+      segments = body["improvements"]["details"].map{|seg| seg["segment_type"]}
+      foundation_type = body["improvements"]["foundation_type"].downcase
+
+      foundation_type += if foundation_type == "concrete"
+        if segments.to_s.include? "BSMT"
+          " (basement)"
+        else
+          " (other)"
+        end
+      end
+
+      foundation_type
+    end
+
     def self.get_year_built(address)
       response_body = get_request_body_from_address(address)
       
