@@ -50,6 +50,7 @@ class HouseScrapper
       home_size_sqft = PortlandMaps::PortlandMapsClass.get_home_size(address)
       year_built = PortlandMaps::PortlandMapsClass.get_year_built(address)
       market_value = PortlandMaps::PortlandMapsClass.get_market_value(address)
+      real_market_value = PortlandMaps::PortlandMapsClass.get_real_market_value(address)
       property_taxes = PortlandMaps::PortlandMapsClass.get_property_taxes(address)
       location_coordinates = 
         PortlandMaps::PortlandMapsClass.get_location_coordinates(address)
@@ -64,6 +65,7 @@ class HouseScrapper
         year built: #{handle_nil_value(year_built)}
         property taxes: #{property_taxes}
         current market value: $#{market_value}
+        \"real\" market value: #{real_market_value}
         zestimate: $#{handle_nil_value(zestimate)}
         foostimate: $#{handle_nil_value(foostimate)}
       "

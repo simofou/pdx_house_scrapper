@@ -160,6 +160,25 @@ module PortlandMaps
       market_value = market_value&.to_s(:delimited)
     end
 
+    def self.get_real_market_value(address)
+      endpoint = "detail/"
+
+      response_body = get_request_body_from_address(address)
+      detail_id = response_body["property_id"]
+
+      response = connection.get("#{endpoint}") do |request|
+        request.params["detail_type"] = "assessor"
+        request.params["detail_id"] = "#{detail_id}"
+        request.params["sections"] = "*"
+      end
+
+      body = JSON.parse(response.body)["assessment history"].first
+      assesement_year = body["year"]
+      real_market_value = body["real_market"]
+
+      "#{real_market_value} (#{assesement_year})"
+    end
+
     def self.get_property_taxes(address)
       endpoint = "detail/"
 
